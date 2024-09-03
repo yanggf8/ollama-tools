@@ -8,7 +8,7 @@ import logging
 import sys
 import argparse
 
-from sample_functions import do_math, get_current_time, get_current_weather, query_duckduckgo
+from sample_functions import do_math, get_current_time, get_current_weather, query_duckduckgo, get_duckduckgo_result
 from ollama_tools import  generate_function_description, use_tools
 
 parser = argparse.ArgumentParser(description='Chatbot example')
@@ -22,7 +22,7 @@ tools=[
         generate_function_description(get_current_weather),
         generate_function_description(get_current_time),
         generate_function_description(do_math),
-        generate_function_description(query_duckduckgo),
+        generate_function_description(get_duckduckgo_result),
         ]
 
 logging.debug("Tools:")
@@ -37,11 +37,17 @@ messages = []
 
 def query_model(messages, tools):
     response = ollama.chat(
-        model='llama3.1',
+        #model='llama3.1',
+        model='sam4096/qwen2tools:latest',
         messages=[ {'role': role, 'content': content} for role,content in messages ],
         tools=tools,
     )
     return response
+
+#q_str = "gemini flash"
+
+#resultStr = get_duckduckgo_result(q_str)
+#print(resultStr)
 
 while True:
     try:
